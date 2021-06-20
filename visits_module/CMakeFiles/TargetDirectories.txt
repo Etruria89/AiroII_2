@@ -1,0 +1,4 @@
+/root/AI4RO_II/AIROII_2/visits/visits_module/CMakeFiles/edit_cache.dir
+/root/AI4RO_II/AIROII_2/visits/visits_module/CMakeFiles/rebuild_cache.dir
+/root/AI4RO_II/AIROII_2/visits/visits_module/CMakeFiles/VisitMain.dir
+/root/AI4RO_II/AIROII_2/visits/visits_module/CMakeFiles/Visits.dir
