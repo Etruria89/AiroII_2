@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,13 +6,13 @@
 
 #IncludeRegexTransform: 
 
-/root/AI4RO_II/AIROII_2/visits/visits_module/src/ExternalSolver.cpp
+/root/ai4ro2/visits_module/src/ExternalSolver.cpp
 ExternalSolver.h
-/root/AI4RO_II/AIROII_2/visits/visits_module/src/ExternalSolver.h
+/root/ai4ro2/visits_module/src/ExternalSolver.h
 dlfcn.h
 -
 
-/root/AI4RO_II/AIROII_2/visits/visits_module/src/ExternalSolver.h
+/root/ai4ro2/visits_module/src/ExternalSolver.h
 iostream
 -
 map
@@ -20,11 +20,11 @@ map
 list
 -
 
-/root/AI4RO_II/AIROII_2/visits/visits_module/src/VisitSolver.cpp
+/root/ai4ro2/visits_module/src/VisitSolver.cpp
 VisitSolver.h
-/root/AI4RO_II/AIROII_2/visits/visits_module/src/VisitSolver.h
+/root/ai4ro2/visits_module/src/VisitSolver.h
 ExternalSolver.h
-/root/AI4RO_II/AIROII_2/visits/visits_module/src/ExternalSolver.h
+/root/ai4ro2/visits_module/src/ExternalSolver.h
 map
 -
 string
@@ -39,14 +39,18 @@ vector
 -
 algorithm
 -
+math.h
+-
 armadillo
-/root/AI4RO_II/AIROII_2/visits/visits_module/src/armadillo
+/root/ai4ro2/visits_module/src/armadillo
 initializer_list
 -
+boost/algorithm/string.hpp
+-
 
-/root/AI4RO_II/AIROII_2/visits/visits_module/src/VisitSolver.h
+/root/ai4ro2/visits_module/src/VisitSolver.h
 ExternalSolver.h
-/root/AI4RO_II/AIROII_2/visits/visits_module/src/ExternalSolver.h
+/root/ai4ro2/visits_module/src/ExternalSolver.h
 string
 -
 vector
@@ -59,4 +63,6 @@ queue
 -
 unordered_map
 -
+armadillo
+/root/ai4ro2/visits_module/src/armadillo
 

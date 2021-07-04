@@ -28,6 +28,8 @@
 #include <queue>
 #include <unordered_map>
 
+#include "armadillo"
+
 using namespace std;
 
 class VisitSolver : public ExternalSolver
@@ -59,9 +61,25 @@ private:
     list<string> dependencies;
       
     double calculateExtern(double external, double total_cost);
-    //void localize(string from, string to);
     vector<string> findParameters(string line, int&n);
 
+    // Extra functions and methods for the solution of the assignment
+    void localize(string from, string to);    
+
+    // Global variables 
+        //Cost function components
+    double dist;
+    double tr;
+        // Parameters
+    const double robot_vel = 0.2;           // Robot velocity                                           [m/s]
+    const double odometry_freq = 10;        // Frequency of environment scan                            [Hz]
+    const double odom_noise = 0.01;         // Odometry/Process noise                                   [m]  
+    const double cov_matr_noise = 0.2;      // Estimate error covariance matrix   
+    const double landmarks_th = 1.0;        // Maximum distance to detect a landmark                    [m]
+    const double meas_noise = 0.05;          // Measurement noise
+    const double tr_factor = 20.0;          // Trace factor to weight the trace in the cost function    [-] 
+                                            // set to have the effect of the trace comparable with the 
+                                            // path lenght    
 };
 
 #endif // TESTSOLVER_H

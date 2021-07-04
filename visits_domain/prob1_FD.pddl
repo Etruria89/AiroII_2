@@ -1,4 +1,4 @@
-(define (problem prob1)
+(define (problem prob1_FD)
 (:domain localization)
 (:objects
      r0 r1 r2 r3 r4 - region
@@ -8,8 +8,7 @@
     (robot_in R2D2 r0)
 
     (= (act-cost) 0)
-    (= (distance) 0)
-
+    (= (dummy) 0)
  
 )
 (:goal 
@@ -18,5 +17,3 @@
 )
 (:metric minimize (act-cost) )
 )
-
-

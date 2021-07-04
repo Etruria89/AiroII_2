@@ -6,8 +6,6 @@
 
 using namespace std;
 
-
-
 int main(int argc, char **argv) {
     
     VisitSolver visitExample;
@@ -25,8 +23,7 @@ int main(int argc, char **argv) {
     map<string,double> initialState;
 
     initialState["(act-cost)"] = 0;
-    initialState["(distance)"] = 0;
-    // initialState["(cov_trace)"] = 0;
+    initialState["(dummy)"] = 0;
     
 
     // Declaring Vector of String type 
