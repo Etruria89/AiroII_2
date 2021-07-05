@@ -73,13 +73,14 @@ private:
         // Parameters
     const double robot_vel = 0.2;           // Robot velocity                                           [m/s]
     const double odometry_freq = 10;        // Frequency of environment scan                            [Hz]
-    const double odom_noise = 0.01;         // Odometry/Process noise                                   [m]  
+    const double odom_noise = 0.01;         // Odometry/Process noise                                   [m] 
     const double cov_matr_noise = 0.2;      // Estimate error covariance matrix   
-    const double landmarks_th = 1.0;        // Maximum distance to detect a landmark                    [m]
-    const double meas_noise = 0.05;          // Measurement noise
-    const double tr_factor = 20.0;          // Trace factor to weight the trace in the cost function    [-] 
+    const double tr_factor = 50.0;          // Trace factor to weight the trace in the cost function    [-] 
                                             // set to have the effect of the trace comparable with the 
                                             // path lenght    
+    const double landmarks_th = 3.0;        // Maximum distance to detect a landmark                    [m]
+    const double meas_noise = 0.05;         // Measurement noise
+ 
 };
 
 #endif // TESTSOLVER_H

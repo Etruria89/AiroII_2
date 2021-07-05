@@ -292,17 +292,14 @@ void VisitSolver::localize( string from, string to)
   arma::mat J_ekf(3,3, arma::fill::eye);                          // Jacobian matrix, constant for this problem 
   arma::mat C_k(2, 3, arma::fill::zeros);
   arma::mat Q_gamma(2,2);                                         // Measurement error covariance matrix
-  arma::mat K_k(3, 2, arma::fill::zeros);                         // Kalman gain
 
   // Initialize the vecotrs required in the EKF algorithm
   arma::vec X_k(3);                          // Robot initial pose   
-  arma::vec X_k_old(3);                      // Robot position at the beginning of the EKF step
+  arma::vec X_k_start(3);                      // Robot position at the beginning of the EKF step
   arma::vec X_k_zero(3);                     // Robot reference pose                   
   arma::vec step_array(3);                   // Displacement step  
   arma::vec noise(3);                        // Movement noise
   arma::vec rand_vec(3, arma::fill::randu);  // Random vector
-  arma::vec Y(2);                            // Measurement vector with artificial noise 
-  arma::vec g(2);                            // Expected measurements vector
 
   // Counter 
   int K = 0; 
@@ -368,9 +365,9 @@ void VisitSolver::localize( string from, string to)
   }
 
 
-  std::cout << endl << "X_k : " << X_k << endl;
-  std::cout << endl << "Steps : " << steps << endl;
-  std::cout << endl << "Step array : " << step_array << endl; 
+  //std::cout << endl << "X_k : " << X_k << endl;
+  //std::cout << endl << "Steps : " << steps << endl;
+  //std::cout << endl << "Step array : " << step_array << endl; 
   
   // Fill the landmar matrix with the coordinates of all the landmarks
     // Random seed
@@ -389,6 +386,7 @@ void VisitSolver::localize( string from, string to)
    
   // For each step in the action movement evaluate the new position of the robot
   // using the EKF using the position of the landmarks to check to verify its position
+  X_k_start = X_k;
 
   for (uint i = 1; i < steps; i++)
   {
@@ -397,11 +395,10 @@ void VisitSolver::localize( string from, string to)
     
     // PREDICTION STEP
       // Robot position prediction withouth and with noise
-    X_k_old = X_k;
     X_k_zero = X_k_zero + step_array;    
     X_k = X_k + step_array + noise;
-    std::cout << endl << "X_k_zero distance : " << X_k_zero << endl;
-    std::cout << endl << "X_k distance : " << X_k << endl;
+    //std::cout << endl << "X_k_zero distance : " << X_k_zero << endl;
+    //std::cout << endl << "X_k distance : " << X_k << endl;
     // A priori estimate error covarince matrix
     P_k = J_ekf * P_k * J_ekf.t() + Q_a;
     
@@ -417,30 +414,35 @@ void VisitSolver::localize( string from, string to)
       // the uncertainty in the covariance matrix reduced 
       if (land_bot_distance < landmarks_th)
       {
+        // Vector and matrix intialization
+        arma::vec Y(2, arma::fill::zeros);        // Measurement vector with artificial noise 
+        arma::vec g(2, arma::fill::zeros);        // Expected measurements vector
+        arma::mat K_k(3, 2, arma::fill::zeros);   // Kalman gain matrix
+
         // Measured values
-        Y(0) = pow(ab_distance(X_k_zero, land_col), 2);                                       // landmark-robot measured squared distance
+        Y(0) = ab_distance(X_k_zero, land_col);                                               // landmark-robot measured distance
         Y(1) = std::atan2(land_col(1)-X_k_zero(1), land_col(0)-X_k_zero(0)) - X_k_zero(2);    // landmark-robot measured orientation
         Y = Y + arma::randn<vec>(2) * meas_noise;                                             // add some noise on the measure          
         //std::cout << endl << "Y distance : " << Y << endl;
 
         // Expected values from the prediction     
-        g(0) = pow(ab_distance(X_k, land_col),2);                            // landmark-robot expected squared distance
-        g(1) = std::atan2(land_col(1)-X_k(1), land_col(0)-X_k(0)) - X_k(2);  // landmark-robot expected orientation
+        g(0) = ab_distance(X_k, land_col);                                    // landmark-robot expected distance
+        g(1) = std::atan2(land_col(1)-X_k(1), land_col(0)-X_k(0)) - X_k(2);   // landmark-robot expected orientation
         //std::cout << endl << "X_k distance : " << X_k << endl;
 
         //  Jacobian matrix of measurement vector, function of state varaibles only                  
-        C_k(0, 0) = 2 * (land_col(0) - X_k(0));
-        C_k(0, 1) = 2 * (land_col(1) - X_k(1));
+        C_k(0, 0) = (X_k(0)- land_col(0))/g(0);
+        C_k(0, 1) = (X_k(1) - land_col(1))/g(0);
         C_k(0, 2) = 0;
-        C_k(1, 0) = (land_col(1) - X_k(1))/g(0);
-        C_k(1, 1) = (land_col(0) - X_k(0))/g(0);
+        C_k(1, 0) = (X_k(1) - land_col(1))/std::pow(g(0), 2);
+        C_k(1, 1) = (X_k(0) - land_col(0))/std::pow(g(0), 2);
         C_k(1, 2) = -1;
        
         Q_gamma = std::pow(meas_noise,2) * I2;
 
         // Kalman gain        
         K_k = P_k * C_k.t() * arma::inv(C_k * P_k * C_k.t() + Q_gamma);
-        std::cout << endl << "K_k kalman : " << K_k << endl;
+        //std::cout << endl << "K_k kalman : " << K_k << endl;
 
         // Update step of the state variables
         X_k = X_k + K_k * (Y - g);
@@ -457,16 +459,15 @@ void VisitSolver::localize( string from, string to)
         // prediction step hence the system noise covariance matrix can only grow
       }   
     }
-
-    // Update the travelled distance at the end of the EKF step
-    double real_distance = ab_distance(X_k, X_k_old);
-    wp_real_distance = wp_real_distance + real_distance;
-
   }
 
-  std::cout << endl << "Nominal distance : " << wp_nominal_distance << endl;
-  std::cout << endl << "Real distance : " << wp_real_distance << endl;
-  std::cout << endl << "Counter  : " << K << endl;
+  // Update the travelled distance at the end of the EKF step
+  double real_distance = ab_distance(X_k, X_k_start);
+  wp_real_distance = wp_real_distance + real_distance;
+
+  //std::cout << endl << "Nominal distance : " << wp_nominal_distance << endl;
+  //std::cout << endl << "Real distance : " << wp_real_distance << endl;
+  //std::cout << endl << "Counter  : " << K << endl;
   dist = wp_real_distance;
   tr = arma::trace(P_k);  
   //std::cout << endl << "P_k : " << P_k << endl;
