@@ -74,7 +74,7 @@ private:
     const double robot_vel = 0.2;           // Robot velocity                                           [m/s]
     const double odometry_freq = 10;        // Frequency of environment scan                            [Hz]
     const double odom_noise = 0.01;         // Odometry/Process noise                                   [m] 
-    const double cov_matr_noise = 0.2;      // Estimate error covariance matrix   
+    const double cov_matr_noise = 0.141;    // Estimate error covariance matrix                         [m] or [deg]                      
     const double tr_factor = 50.0;          // Trace factor to weight the trace in the cost function    [-] 
                                             // set to have the effect of the trace comparable with the 
                                             // path lenght    

@@ -18,22 +18,26 @@ AiroII_2/
     	visit_module/   , motion planning files
         	|
         	src	/        , motion planning scripts
-            	|
-            	CMakeLists.txt  	, the cmake file
-            	ExternalSolver.cpp  , definition of the interface used for the semantic
-                                  	attachments
-            	ExternalSolver.h    , declaration of the interface used for the semantic
-                                  	attachments
-            	VisitSolver.cpp     , definition of the class to solve the motion planning
-            						step based on EKF
-            	VisitSolver.h       , declaration of the class to solve the motion planning
-            						step based on EKF
-           	 	buildInstruction.txt, script used to build the library
-            	main.cpp            , main using the solver
+			|
+			CMakeLists.txt  	, the cmake file
+			ExternalSolver.cpp  , definition of the interface used for the semantic
+						attachments
+			ExternalSolver.h    , declaration of the interface used for the semantic
+						attachments
+			VisitSolver.cpp     , definition of the class to solve the motion planning
+								step based on EKF
+			VisitSolver.h       , declaration of the class to solve the motion planning
+								step based on EKF
+				buildInstruction.txt, script used to build the library
+			main.cpp            , main using the solver
         	|
-            build /
-            	  |  
-            	  Built files		, built files
+                build /
+            	      |  
+            	      Built files		, built files
+		|
+		CMakeFiles /
+            	           |  
+            	           CMake files		, CMake files
             	
         |
         .gitignore	, ignored files list
@@ -65,12 +69,12 @@ The EKF algorithm here implemented relies on a series of parameters typically re
 - **robot_vel = 0.2 :** The robot linear velocity. 
 - **odometry_freq = 10**  The sampling  rate of the imaginary robot sensor for detecting the landmarks.
 - **odom_noise= 0.01**   The $\sigma_{odom}$ of the odometry noise added each step to the robot state.
-- **cov_matr_noise= 0.2**   The starting noise for each localization step.
+- **cov_matr_noise= 0.141**   The covariance matrix noise. 
 - **trace_weight = 50**  The weight given to the $trace(P_k)$ in the cost function. This values was detected to obtain an equilibrium in between the two components of the function, hence defined as:
 $$
 cost = d(start,goal) + 50 * trace(P_{(start,goal)})
 $$
-​		where the notation used for *P* indicates the covariance matrix obtained by running the EKF from the starting to the goal 		configuration while *d* is an estimation of the effective distance travelled by the robot to reach the goal from the starting 		point.
+		where the notation used for *P* indicates the covariance matrix obtained by running the EKF from the starting to the goal 		configuration while *d* is an estimation of the effective distance travelled by the robot to reach the goal from the starting 		point.
 
 **Sensitivity parameters:**
 
@@ -113,12 +117,12 @@ A map of the 2D space used in this task is show in Figure 1.
                   |
   L3 --- Wp --- Start --- Wp1 --- L1
 [-4,0] [-2,0]	[0,0]	 [2,0]   [4,0]
-				  |
-				  |
-				 Wp[0,-2] 
-				  |
-				  |				 
-				 L4[0,-4]                
+                  |
+                  |
+                 Wp[0,-2] 
+                  |
+                  |				 
+                 L4[0,-4]                
 ```
 
 Figure 1: Simplified map where *Wp*  and *L* stand for waypoint and landmark respectively.
